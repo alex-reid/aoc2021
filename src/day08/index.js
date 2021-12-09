@@ -13,10 +13,9 @@ const getNumbers = (codes) => ({
   1: codes.find((i) => i.length == 2),
   4: codes.find((i) => i.length == 4),
   7: codes.find((i) => i.length == 3),
-  8: codes.find((i) => i.length == 7),
 });
 
-const getAlpha = (input) => ({
+const countAlpha = (input) => ({
   a: input.match(/a/g).length,
   b: input.match(/b/g).length,
   c: input.match(/c/g).length,
@@ -30,7 +29,7 @@ const strIntersect = (a, b) =>
   a.split("").filter((x) => !b.split("").includes(x))[0];
 
 /*
-a = 8 x (7 - 4)
+a = 8 x (7 - 1)
 b = 6
 c = 8 x (what ever is not in 1)
 d = 7 x (4 - (7 + b))
@@ -44,19 +43,15 @@ const part2 = (rawInput) => {
   const output = [];
   for (let i = 0; i < input.length; i++) {
     const codes = input[i][0].match(/[\w]+/g);
-    const digits = input[i][1].match(/[\w]+/g);
+
     const numbers = getNumbers(codes);
-    const alpha = getAlpha(input[i][0]);
+    const alpha = countAlpha(input[i][0]);
 
     const positions = {};
-    positions.a = strIntersect(numbers[7], numbers[1]);
     for (let a in alpha) {
       switch (alpha[a]) {
         case 6:
           positions.b = a;
-          break;
-        case 4:
-          positions.e = a;
           break;
         case 9:
           positions.f = a;
@@ -65,10 +60,8 @@ const part2 = (rawInput) => {
     }
     positions.c = strIntersect(numbers[1], positions.f);
     positions.d = strIntersect(numbers[4], numbers[7] + positions.b);
-    positions.g = strIntersect(
-      numbers[8],
-      numbers[4] + positions.e + positions.a,
-    );
+
+    const digits = input[i][1].match(/[\w]+/g);
 
     output[i] = "";
     for (const num of digits) {
