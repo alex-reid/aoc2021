@@ -74,7 +74,7 @@ const part1 = (rawInput) => {
   input.forEach((element) => createNode(map, element));
 
   const paths = [];
-  const traverse = (map, nextNode, path = []) => {
+  const traverse = (map, nextNode, path = ["start"]) => {
     nextNode.nodes.forEach((n) => {
       let node = map[n];
       switch (node.type) {
@@ -94,19 +94,18 @@ const part1 = (rawInput) => {
       }
     });
   };
-  traverse(map, map.start, ["start"]);
+  traverse(map, map.start);
   return paths.length;
 };
 
-const countOccurrences = (arr, val) =>
-  arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+const countOccurrences = (arr, val) => arr.filter((v) => v === val).length;
 
 const part2 = (rawInput) => {
   const input = parseInput(rawInput);
   const map = {};
   input.forEach((element) => createNode(map, element));
 
-  const paths = new Set();
+  const paths = [];
   const traverse = (map, currentNode, path = ["start"], visitSmall = true) => {
     currentNode.nodes.forEach((n) => {
       let node = map[n];
@@ -115,7 +114,7 @@ const part2 = (rawInput) => {
           return;
         case END:
           path.push("end");
-          paths.add(path.join());
+          paths.push(path);
           return;
         case BIG:
           traverse(map, node, [...path, node.name], visitSmall);
@@ -134,7 +133,7 @@ const part2 = (rawInput) => {
   };
   traverse(map, map.start);
   //console.log(paths);
-  return paths.size;
+  return paths.length;
 };
 
 run({
